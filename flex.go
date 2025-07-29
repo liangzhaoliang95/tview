@@ -81,7 +81,12 @@ func (f *Flex) SetFullScreen(fullScreen bool) *Flex {
 
 // AddItemAtIndex add an item to the flex at a given index.
 // BOZO!!
-func (f *Flex) AddItemAtIndex(index int, item Primitive, fixedSize, proportion int, focus bool) *Flex {
+func (f *Flex) AddItemAtIndex(
+	index int,
+	item Primitive,
+	fixedSize, proportion int,
+	focus bool,
+) *Flex {
 	i := &flexItem{Item: item, FixedSize: fixedSize, Proportion: proportion, Focus: focus}
 
 	if index == 0 {
@@ -102,6 +107,11 @@ func (f *Flex) ItemAt(index int) Primitive {
 	return f.items[index].Item
 }
 
+// RemoveItemAtIndex remove an item at the given index.
+func (f *Flex) RemoveItemAtIndex(index int) *Flex {
+	return f.RemoveItem(f.items[index].Item)
+}
+
 // AddItem adds a new item to the container. The "fixedSize" argument is a width
 // or height that may not be changed by the layout algorithm. A value of 0 means
 // that its size is flexible and may be changed. The "proportion" argument
@@ -117,7 +127,10 @@ func (f *Flex) ItemAt(index int) Primitive {
 // You can provide a nil value for the primitive. This will still consume screen
 // space but nothing will be drawn.
 func (f *Flex) AddItem(item Primitive, fixedSize, proportion int, focus bool) *Flex {
-	f.items = append(f.items, &flexItem{Item: item, FixedSize: fixedSize, Proportion: proportion, Focus: focus})
+	f.items = append(
+		f.items,
+		&flexItem{Item: item, FixedSize: fixedSize, Proportion: proportion, Focus: focus},
+	)
 	return f
 }
 
@@ -249,24 +262,26 @@ func (f *Flex) HasFocus() bool {
 
 // MouseHandler returns the mouse handler for this primitive.
 func (f *Flex) MouseHandler() func(action MouseAction, event *tcell.EventMouse, setFocus func(p Primitive)) (consumed bool, capture Primitive) {
-	return f.WrapMouseHandler(func(action MouseAction, event *tcell.EventMouse, setFocus func(p Primitive)) (consumed bool, capture Primitive) {
-		if !f.InRect(event.Position()) {
-			return false, nil
-		}
-
-		// Pass mouse events along to the first child item that takes it.
-		for _, item := range f.items {
-			if item.Item == nil {
-				continue
+	return f.WrapMouseHandler(
+		func(action MouseAction, event *tcell.EventMouse, setFocus func(p Primitive)) (consumed bool, capture Primitive) {
+			if !f.InRect(event.Position()) {
+				return false, nil
 			}
-			consumed, capture = item.Item.MouseHandler()(action, event, setFocus)
-			if consumed {
-				return
-			}
-		}
 
-		return
-	})
+			// Pass mouse events along to the first child item that takes it.
+			for _, item := range f.items {
+				if item.Item == nil {
+					continue
+				}
+				consumed, capture = item.Item.MouseHandler()(action, event, setFocus)
+				if consumed {
+					return
+				}
+			}
+
+			return
+		},
+	)
 }
 
 // InputHandler returns the handler for this primitive.
