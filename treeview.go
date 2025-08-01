@@ -262,6 +262,14 @@ func (n *TreeNode) GetLevel() int {
 	return n.level
 }
 
+// GetParentNode returns the parent node of the currently selected node or nil
+func (n *TreeNode) GetParentNode() *TreeNode {
+	if n.parent == nil {
+		return nil
+	}
+	return n.parent
+}
+
 // TreeView displays tree structures. A tree consists of nodes (TreeNode
 // objects) where each node has zero or more child nodes and exactly one parent
 // node (except for the root node which has no parent node).
