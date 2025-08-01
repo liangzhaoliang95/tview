@@ -190,15 +190,17 @@ func (m *Modal) Draw(screen tcell.Screen) {
 
 // MouseHandler returns the mouse handler for this primitive.
 func (m *Modal) MouseHandler() func(action MouseAction, event *tcell.EventMouse, setFocus func(p Primitive)) (consumed bool, capture Primitive) {
-	return m.WrapMouseHandler(func(action MouseAction, event *tcell.EventMouse, setFocus func(p Primitive)) (consumed bool, capture Primitive) {
-		// Pass mouse events on to the form.
-		consumed, capture = m.form.MouseHandler()(action, event, setFocus)
-		if !consumed && action == MouseLeftDown && m.InRect(event.Position()) {
-			setFocus(m)
-			consumed = true
-		}
-		return
-	})
+	return m.WrapMouseHandler(
+		func(action MouseAction, event *tcell.EventMouse, setFocus func(p Primitive)) (consumed bool, capture Primitive) {
+			// Pass mouse events on to the form.
+			consumed, capture = m.form.MouseHandler()(action, event, setFocus)
+			if !consumed && action == MouseLeftDown && m.InRect(event.Position()) {
+				setFocus(m)
+				consumed = true
+			}
+			return
+		},
+	)
 }
 
 // InputHandler returns the handler for this primitive.
