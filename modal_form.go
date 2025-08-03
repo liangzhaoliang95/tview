@@ -13,7 +13,7 @@ type ModalForm struct {
 func NewModalForm(title string, form *Form) *ModalForm {
 	m := ModalForm{NewModal()}
 	m.form = form
-	m.form.SetBackgroundColor(Styles.ContrastBackgroundColor).SetBorderPadding(0, 0, 0, 0)
+	m.form.SetBackgroundColor(tcell.ColorBlue).SetBorderPadding(0, 0, 0, 0)
 	m.form.SetCancelFunc(func() {
 		if m.done != nil {
 			m.done(-1, "")
@@ -21,7 +21,7 @@ func NewModalForm(title string, form *Form) *ModalForm {
 	})
 	m.frame = NewFrame(m.form).SetBorders(0, 0, 1, 0, 0, 0)
 	m.frame.SetBorder(true).
-		SetBackgroundColor(Styles.ContrastBackgroundColor).
+		SetBackgroundColor(tcell.ColorBlue).
 		SetBorderPadding(1, 1, 1, 1)
 	m.frame.SetTitle(title)
 	m.frame.SetTitleColor(tcell.ColorAqua)
