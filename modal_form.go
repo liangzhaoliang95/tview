@@ -35,7 +35,7 @@ func (m *ModalForm) Draw(screen tcell.Screen) {
 	// Calculate the width of this modal.
 	buttonsWidth := 0
 	for _, button := range m.form.buttons {
-		buttonsWidth += TaggedStringWidth(button.text) + 4 + 2
+		buttonsWidth += TaggedStringWidth(button.title) + 4 + 2
 	}
 	buttonsWidth -= 2
 	screenWidth, screenHeight := screen.Size()
@@ -51,9 +51,22 @@ func (m *ModalForm) Draw(screen tcell.Screen) {
 	for _, line := range lines {
 		m.frame.AddText(line, true, AlignCenter, m.textColor)
 	}
-
+	height := len(lines) + len(m.form.buttons) + 5
+	for i := 0; i < len(m.form.items); i++ {
+		item := m.form.items[i]
+		// 判断item类型 设置不同高度
+		t, ok := item.(*TextArea)
+		if ok {
+			h := t.GetFieldHeight()
+			if h == 0 {
+				h = 3
+			}
+			height += h // TextArea has more padding
+			continue
+		}
+		height += 1
+	}
 	// Set the modal's position and size.
-	height := len(lines) + len(m.form.items) + len(m.form.buttons) + 5
 	width += 4
 	x := (screenWidth - width) / 2
 	y := (screenHeight - height) / 2
