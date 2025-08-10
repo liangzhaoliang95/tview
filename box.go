@@ -12,7 +12,7 @@ import (
 //
 // Box provides a number of utility functions available to all primitives.
 //
-// See https://github.com/rivo/tview/wiki/Box for an example.
+// See https://github.com/liangzhaoliang95/tview/wiki/Box for an example.
 type Box struct {
 	// The position of the rect.
 	x, y, width, height int

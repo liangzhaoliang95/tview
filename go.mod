@@ -1,6 +1,6 @@
-module github.com/rivo/tview
+module github.com/liangzhaoliang95/tview
 
-go 1.18
+go 1.24
 
 require (
 	github.com/alecthomas/chroma v0.10.0
